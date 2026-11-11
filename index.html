@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827"><title>My Daily Routine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/themes.css"><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/dashboard.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/responsive.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+</head>
+<body>
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card"><div class="brand-mark">✦</div><h1>My Daily Routine</h1><p class="muted">Your day, your progress, in one place.</p>
+  <form id="login-form"><label>Email address<input type="email" id="login-email" required autocomplete="email"></label><label>Password<input type="password" id="login-password" required autocomplete="current-password"></label><button class="btn primary full">Sign in</button></form>
+  <p class="auth-links"><a href="register.html">Create account</a><a href="forgot-password.html">Forgot password?</a></p>
+  <p id="auth-message" class="message"></p></div>
+</div>
+<div id="app" class="app-shell hidden">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#dashboard"><span class="brand-mark">✦</span><span>Daily<span class="brand-light">Routine</span></span></a>
+    <div class="side-label">WORKSPACE</div>
+    <nav id="side-nav">
+      <a href="#dashboard" data-route="dashboard">▦ <span>Overview</span></a>
+      <a href="#prayers" data-route="prayers">☾ <span>Prayer tracker</span></a>
+      <a href="#expenses" data-route="expenses">↗ <span>Expenses</span></a>
+      <a href="#trading" data-route="trading">⌁ <span>Trading journal</span></a>
+      <a href="#calendar" data-route="calendar">▦ <span>Calendar & tasks</span></a>
+      <a href="#analytics" data-route="analytics">◫ <span>Analytics</span></a>
+    </nav>
+    <div class="side-label">ACCOUNT</div>
+    <nav><a href="#profile" data-route="profile">◎ <span>My profile</span></a><a href="#settings" data-route="settings">⚙ <span>Settings</span></a><a href="#admin" data-route="admin" id="admin-nav" class="hidden">♜ <span>Admin</span></a></nav>
+    <div class="sidebar-bottom"><div class="mini-user"><img id="side-avatar" src="assets/images/avatar.svg"><div><strong id="side-name">Your account</strong><small id="side-email"></small></div></div><button id="logout-btn" class="btn ghost full">↪ Sign out</button></div>
+  </aside>
+  <div class="main-column">
+    <header class="topbar"><button id="menu-btn" class="icon-btn mobile-only" aria-label="Open menu">☰</button><div><div class="eyebrow" id="today-label">YOUR PERSONAL SPACE</div><strong id="page-heading">Overview</strong></div><div class="top-actions"><button id="theme-toggle" class="icon-btn" title="Toggle theme">☼</button><a href="#profile" class="header-avatar"><img id="header-avatar" src="assets/images/avatar.svg"></a></div></header>
+    <main id="content" class="content" aria-live="polite"><div class="loading"><span class="spinner"></span> Loading your workspace…</div></main>
+    <footer class="footer"><span>© <span id="year"></span> My Daily Routine</span><span>Small steps. Consistent progress.</span></footer>
+  </div>
+</div>
+<div id="toast-root" class="toast-root"></div>
+<script src="js/utils.js"></script><script src="js/auth.js"></script><script src="js/router.js"></script><script src="js/dashboard.js"></script><script src="js/prayers.js"></script><script src="js/expenses.js"></script><script src="js/trading.js"></script><script src="js/calendar.js"></script><script src="js/analytics.js"></script><script src="js/profile.js"></script><script src="js/settings.js"></script><script src="js/admin.js"></script><script src="js/app.js"></script>
+</body></html>
