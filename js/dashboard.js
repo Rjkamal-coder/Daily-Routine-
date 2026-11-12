@@ -1,0 +1,18 @@
+window.pageControllers=window.pageControllers||{};
+pageControllers.dashboard=async()=>{
+ const month=$("#dash-month");month.value=monthNow();$("#dash-date").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+ const load=async()=>{
+  const m=month.value;const [p,e,t,tasks]=await Promise.all([getRows("prayer_records"),getRows("expenses"),getRows("trading_records"),getRows("daily_tasks")]);
+  const ps=monthRows(p,m),es=monthRows(e,m),ts=monthRows(t,m),ds=monthRows(tasks,m);
+  const done=ps.reduce((s,r)=>s+["fajr","dhuhr","asr","maghrib","isha"].filter(k=>r[k]===true).length,0),total=ps.length*5;
+  const spend=es.reduce((s,r)=>s+Number(r.amount),0),wins=ts.reduce((s,r)=>s+Number(r.winning_amount||0),0),loss=ts.reduce((s,r)=>s+Number(r.losing_amount||0),0),net=wins-loss;
+  const winTrades=ts.filter(r=>r.result==="win").length,lossTrades=ts.filter(r=>r.result==="loss").length;
+  const cards=[["Prayer completion",total?`${Math.round(done/total*100)}%`:"—",`${done}/${total} prayers`],["Total expenses",money(spend),`${es.length} records`],["Trading profit",money(wins),"Winning amount"],["Trading losses",money(loss),"Losing amount"],["Net trading P/L",money(net),`${ts.length} trading days`],["Win rate",ts.length?`${Math.round(winTrades/ts.length*100)}%`:"—",`${winTrades} wins · ${lossTrades} losses`],["Tasks completed",`${ds.filter(x=>x.completed).length}/${ds.length}`, "Personal tasks"],["Monthly savings",money(Number(userProfile?.monthly_income||0)-spend),userProfile?.monthly_income?"Based on profile income":"Add income in profile settings"]];
+  $("#monthly-stats").innerHTML=cards.map((c,i)=>`<article class="stat-card"><span>${c[0]}</span><strong class="${i===4?(net>=0?"positive":"negative"):""}">${c[1]}</strong><small>${c[2]}</small></article>`).join("");
+  $("#activity-chart").innerHTML=`<div class="progress-line"><span>Prayer completion</span><b>${total?Math.round(done/total*100):0}%</b></div><div class="track"><i style="width:${total?done/total*100:0}%"></i></div><div class="progress-line"><span>Task completion</span><b>${ds.length?Math.round(ds.filter(x=>x.completed).length/ds.length*100):0}%</b></div><div class="track"><i style="width:${ds.length?ds.filter(x=>x.completed).length/ds.length*100:0}%"></i></div>`;
+  $("#trade-snapshot").innerHTML=`<div class="net-value ${net>=0?"positive":"negative"}">${money(net)}</div><div class="snapshot-grid"><span>Trades<strong>${ts.length}</strong></span><span>Wins<strong>${winTrades}</strong></span><span>Losses<strong>${lossTrades}</strong></span></div>`;
+  const todayRecord=p.find(x=>x.date===today());$("#today-prayers").innerHTML=["Fajr","Dhuhr","Asr","Maghrib","Isha"].map(k=>`<span class="prayer-chip ${todayRecord?.[k.toLowerCase()]===true?"done":todayRecord?.[k.toLowerCase()]===false?"missed":""}">${k}</span>`).join("");
+  const todayTasks=tasks.filter(x=>x.date===today());$("#today-tasks").innerHTML=todayTasks.length?todayTasks.map(x=>`<div class="task-line">${x.completed?"✓":"○"} ${escapeHTML(x.title)}</div>`).join(""):'<p class="muted">No tasks planned for today.</p>';
+ };
+ $("#refresh-dashboard").onclick=()=>load().catch(e=>toast(e.message,"error"));month.onchange=()=>load().catch(e=>toast(e.message,"error"));await load();$("#daily-quote").textContent=["Consistency is built one small decision at a time.","Progress is better than perfection.","Make the next choice a good one.","A focused day is made of focused moments."][new Date().getDate()%4];
+};

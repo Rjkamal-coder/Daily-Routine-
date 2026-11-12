@@ -1,0 +1,1 @@
+$("#theme-toggle").addEventListener("click",toggleTheme);$("#year").textContent=new Date().getFullYear();

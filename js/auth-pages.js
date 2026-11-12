@@ -1,0 +1,5 @@
+const msg=id=>document.getElementById(id);
+const reg=document.getElementById("register-form");
+if(reg)reg.addEventListener("submit",async e=>{e.preventDefault();const {data,error}=await db.auth.signUp({email:document.getElementById("reg-email").value,password:document.getElementById("reg-password").value,options:{data:{display_name:document.getElementById("reg-name").value},emailRedirectTo:location.origin+location.pathname.replace(/[^/]*$/,"index.html")}});msg("register-message").textContent=error?error.message:(data.session?"Account created.":"Check your email to confirm your account, then sign in.");});
+const reset=document.getElementById("reset-form");
+if(reset)reset.addEventListener("submit",async e=>{e.preventDefault();const {error}=await db.auth.resetPasswordForEmail(document.getElementById("reset-email").value,{redirectTo:location.origin+location.pathname.replace(/[^/]*$/,"index.html")});msg("reset-message").textContent=error?error.message:"If the email is registered, a reset link has been sent.";});
